@@ -45,24 +45,17 @@ task packageDistribution(type: Zip, dependsOn: dep) {
     destinationDirectory = file("build")
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifact source: packageDistribution, extension: 'zip'
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                username nexusUsername
-                password nexusPassword
-            }
-            url nexusRepo
-        }
-    }
+task up(type:Exec, dependsOn: packageDistribution) {
+  executable 'sh'
+  args '-c', 'curl -v --user "'+nexusUsername+':'+nexusPassword+'" --upload-file build/project-'+version+'.zip http://'+nexusRepo+':8081/repository/ArchiveZip/demo-python/project/'+version+'/application-'+version+'.zip'
+  standardOutput = new ByteArrayOutputStream()
+  ext.output = { return standardOutput.toString() }
+//   doLast {
+//      environment 'MINOR_VERSION', newVersion
+//    }
 }
 
-task updateItManagement(type:Exec, dependsOn: up) {
+task updateItManagement(type:Exec, dependsOn: dep) {
   executable 'sh'
   args '-c', 'curl -v http://localhost:5000/application'
   standardOutput = new ByteArrayOutputStream()
