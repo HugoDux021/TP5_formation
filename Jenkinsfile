@@ -1,7 +1,7 @@
 pipeline {
 
       environment {
-        imagename = "vanessakovalsky/my-image-python"
+        imagename = 'formation2/cont-python:cont-python'
         registryCredential = 'docker'
       }
 
@@ -9,13 +9,13 @@ pipeline {
       stages {
         stage('Clone sources') {
             steps {
-                git url: 'https://github.com/vanessakovalsky/python-api-handle-it.git'
+                git url: 'https://github.com/HugoDux021/TP5_formation'
             }
         }
         stage('continuous integration') { // Compile and do unit testing
-             tools {
-               gradle 'installGradle'
-             }
+            // tools {
+            //   gradle 'installGradle'
+            //}
              steps {
                  parallel (
                  // run Gradle to execute compile and unit testing
@@ -37,11 +37,11 @@ pipeline {
         //         sh 'gradle test'
         //     }
         // }
-        
+
         stage('Package and deploy') {
-             tools {
-               gradle 'installGradle'
-             }
+            // tools {
+            //   gradle 'installGradle'
+            // }
             steps {
                 sh 'gradle up'
             }
@@ -52,7 +52,7 @@ pipeline {
                 script {
                     docker.build registry + ":$BUILD_NUMBER"
                 } 
-            }       
+            }
         }
 
         stage('Push Image') {
@@ -67,13 +67,7 @@ pipeline {
 
         stage('Test image docker') {
             steps {
-                sh 'docker run -d --name my-image-python -p 3002:3002 --rm vanessakovalsky/my-image-python'
-            }
-        }
-
-        stage('Deploy to environment') {
-            steps {
-                sh 'ansible-playbook -i vagrant/k8s-ansible/inventory vagrant/k8s-ansible/k8s-deployment.yml'
+                sh 'docker run -d --name cont-python:cont-python -p 3002:3002 --rm formation2/cont-python:cont-python'
             }
         }
       }
