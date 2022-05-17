@@ -18,14 +18,6 @@ task dep(type:Exec, dependsOn: purge) {
     ext.output = { return standardOutput.toString() }
 }
 
-// task test(type:Exec, dependsOn: dep) {
-//   //println 'Executing tests'
-//     executable 'sh'
-//     args '-c', 'pytest app/test/test.py >> result-pytest.txt'
-//     standardOutput = new ByteArrayOutputStream()
-//     ext.output = { return standardOutput.toString() }
-// }
-
 task pycodestyle(type:Exec, dependsOn: dep) {
     executable 'sh'
     args '-c', "pycodestyle app/ >> result-pycode.txt"
@@ -55,7 +47,7 @@ task up(type:Exec, dependsOn: packageDistribution) {
 //    }
 }
 
-task updateItManagement(type:Exec, dependsOn: dep) {
+task updateItManagement(type:Exec, dependsOn: up) {
   executable 'sh'
   args '-c', 'curl -v http://localhost:5000/application'
   standardOutput = new ByteArrayOutputStream()

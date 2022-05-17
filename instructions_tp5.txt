@@ -1,0 +1,23 @@
+Utilisation de Jenkins : automatisation de builds.
+
+- Télécharger les fichiers du dépôt GitHub.
+- Ouvrir un terminal.
+- Ouvrir le dossier contenant les fichiers récupérés.
+- Lancer la commande : 'docker build -t imagejenkins .' pour construire l'image jenkins. 
+- Lancer la commande : 'docker compose-up -d' pour lancer les conteneurs jenkins et nexus en arrière-plan. 
+- Récupérer l'ID du conteneur Jenkins avec la commande : 'docker ps'.
+- Accéder au terminal du conteneur Jenkins avec la commande : 'docker exec -it <ID_conteneur_Jenkins> sh'.
+- Ouvrir un navigateur internet et rentrer l'adresse 'http://localhost:8098' pour accéder à Jenkins.
+- Copier le chemin indiqué par Jenkins lors de votre première connexion et rentrez-le dans la commande 'cat <chemin_indiqué>'.
+- Copier le mot de passe affiché et le coller dans Jenkins. 
+- Configurer les plugins (vous pouvez laisser les plugins recommandés).
+- Configurer votre compte admin. 
+
+- Dans Administrer Jenkins > Configuration globale des outils, configurer l'installation de gradle en le nommant 'gradle'. 
+- On crée un projet pipeline sur Jenkins.
+- Dans Gestion de code source, on choisit Git et on lui donne l'url du dépôt https://github.com/HugoDux021/TP5_formation.git.
+- Dans Build, choisir 'invoke Gradle', sélectionner l'installation de gradle qu'on a créé et lui donner le nom de la tâche à exécuter. 
+- Aller dans l'onglet 'configure'
+- Coller le contenu du fichier Jenkinsfile dans 'pipeline'
+- Sauver le job.
+- Lancer un build.
