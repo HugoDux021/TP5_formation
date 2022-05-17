@@ -62,3 +62,4 @@ task updateItManagement(type:Exec, dependsOn: up) {
   args '-c', 'curl -v http://localhost:5000/application'
   standardOutput = new ByteArrayOutputStream()
   ext.output = { return standardOutput.toString() }
+}
