@@ -49,12 +49,12 @@ task packageDistribution(type: Zip, dependsOn: dep) {
 
 task up(type:Exec, dependsOn: packageDistribution) {
   executable 'sh'
-  args '-c', 'curl -v --user "'+nexusUsername+':'+nexusPassword+'" --upload-file build/project-'+version+'.zip '+nexusRepo+'/'+version+'application-'+version+'.zip'
+  args '-c', 'curl -v --user "'+nexusUsername+':'+nexusPassword+'" --upload-file build/project-'+version+'.zip http://'+nexusRepo+':8081/repository/ArchiveZip/demo-python/project/'+version+'/application-'+version+'.zip'
   standardOutput = new ByteArrayOutputStream()
   ext.output = { return standardOutput.toString() }
-   doLast {
-      environment 'MINOR_VERSION', newVersion
-    }
+//   doLast {
+//      environment 'MINOR_VERSION', newVersion
+//    }
 }
 
 task updateItManagement(type:Exec, dependsOn: up) {
