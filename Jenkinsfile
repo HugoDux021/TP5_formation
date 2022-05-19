@@ -1,7 +1,7 @@
 pipeline {
 
       environment {
-        imagename = 'formation2/cont-python:cont-python'
+        imagename = 'imagejenkins'
         registryCredential = 'docker'
       }
 
@@ -9,13 +9,14 @@ pipeline {
       stages {
         stage('Clone sources') {
             steps {
-                git url: 'https://github.com/HugoDux021/TP5_formation'
+                git url: 'https://github.com/HugoDux021/TP5_formation.git',
+                branch: "main"
             }
         }
         stage('continuous integration') { // Compile and do unit testing
-            // tools {
-            //   gradle 'installGradle'
-            //}
+             tools {
+               gradle 'gradle'
+            }
              steps {
                  parallel (
                  // run Gradle to execute compile and unit testing
@@ -30,18 +31,18 @@ pipeline {
            }
 
         // stage('testcode') {
-            //  tools {
-            //    gradle 'installGradle'
-            //  }
+             // tools {
+             //   gradle 'radle'
+            // }
         //     steps {
         //         sh 'gradle test'
         //     }
         // }
 
         stage('Package and deploy') {
-            // tools {
-            //   gradle 'installGradle'
-            // }
+             tools {
+               gradle 'gradle'
+             }
             steps {
                 sh 'gradle up'
             }
@@ -55,20 +56,20 @@ pipeline {
             }
         }
 
-        stage('Push Image') {
-            steps{
-                script {
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push("$BUILD_NUMBER")
-                    }
-                }
-            }
-        }
+        //stage('Push Image') {
+        //    steps{
+        //        script {
+         //           docker.withRegistry( '', registryCredential ) {
+         //               dockerImage.push("$BUILD_NUMBER")
+          //          }
+        //        }
+         //   }
+        //}
 
-        stage('Test image docker') {
-            steps {
-                sh 'docker run -d --name cont-python:cont-python -p 3002:3002 --rm formation2/cont-python:cont-python'
-            }
-        }
-      }
+        //stage('Test image docker') {
+        //    steps {
+        //        sh 'docker run -d --name cont-python:cont-python -p 3002:3002 --rm formation2/cont-python:cont-python'
+         //   }
+        //}
+    }
  }
